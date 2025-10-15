@@ -84,6 +84,36 @@
         .product-price {
             @apply text-2xl font-extrabold text-white mb-4;
         }
+
+        /* --- EFEITO DE ADICIONAR AO CARRINHO --- */
+        .btn-add-to-cart {
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .btn-add-to-cart::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white; /* Cor da animação */
+            transform: translateX(-100%); /* Começa fora do botão */
+            transition: transform 0.3s ease-out;
+            z-index: -1;
+        }
+
+        .btn-add-to-cart.animate-success {
+            color: black !important; /* Força a cor do texto para preto durante a animação */
+            pointer-events: none; /* Desativa cliques repetidos */
+        }
+
+        .btn-add-to-cart.animate-success::after {
+            transform: translateX(0); /* Preenche o botão */
+        }
+        /* --- FIM EFEITO DE ADICIONAR AO CARRINHO --- */
     </style>
 </head>
 <body>
@@ -147,7 +177,8 @@
             }
         }
 
-        function addToCart(id, name, price) {
+        /** Adiciona um item ao carrinho ou aumenta sua quantidade. */
+        function addToCart(id, name, price, buttonElement) {
             const existingItemIndex = cart.findIndex(item => item.id === id);
 
             if (existingItemIndex > -1) {
@@ -158,9 +189,20 @@
 
             localStorage.setItem('17store_cart', JSON.stringify(cart));
             updateCartDisplay();
+            
+            // ANIMAÇÃO DE SUCESSO NO BOTÃO
+            if (buttonElement) {
+                buttonElement.classList.add('animate-success');
+                // Remove a animação após o preenchimento para o botão voltar ao normal
+                setTimeout(() => {
+                    buttonElement.classList.remove('animate-success');
+                }, 350); // Deve ser um pouco mais longo que o tempo de transição do CSS (0.3s)
+            }
+
             showTemporaryMessage('"' + name + '" adicionada ao carrinho!');
         }
 
+        /** Gera a mensagem do WhatsApp e redireciona. */
         function checkoutCart() {
             if (cart.length === 0) {
                 showTemporaryMessage('Seu carrinho está vazio. Adicione um produto primeiro!', true);
@@ -366,384 +408,384 @@
                     
                     <!-- PRODUTOS GERADOS A PARTIR DOS ARQUIVOS FORNECIDOS (40 arquivos = 20 produtos) -->
                     
-                    <!-- Produto 1: Camisa Street Essentials 01 -->
+                    <!-- Produto 1: Nike Rat -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.21.jpeg" 
-                                 alt="Camisa Street Essentials 01 - Frente" 
+                                 alt="Camisa Nike Rat - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.22.jpeg" 
-                                 alt="Camisa Street Essentials 01 - Verso" 
+                                 alt="Camisa Nike Rat - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 01</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Rat</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(1, 'Camisa Street Essentials 01', 74.99)" 
-                                data-id="1" data-name="Camisa Street Essentials 01" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(1, 'Camisa Nike Rat', 74.99, this)" 
+                                id="btn-cart-1" data-id="1" data-name="Camisa Nike Rat" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
-                    <!-- Produto 2: Camisa Street Essentials 02 -->
+                    <!-- Produto 2: Nike Shoes -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.22 (1).jpeg" 
-                                 alt="Camisa Street Essentials 02 - Frente" 
+                                 alt="Camisa Nike Shoes - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.22 (2).jpeg" 
-                                 alt="Camisa Street Essentials 02 - Verso" 
+                                 alt="Camisa Nike Shoes - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 02</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Shoes</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(2, 'Camisa Street Essentials 02', 74.99)"
-                                data-id="2" data-name="Camisa Street Essentials 02" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(2, 'Camisa Nike Shoes', 74.99, this)"
+                                id="btn-cart-2" data-id="2" data-name="Camisa Nike Shoes" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 3: Camisa Street Essentials 03 -->
+                    <!-- Produto 3: Nike Donald -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.22 (3).jpeg" 
-                                 alt="Camisa Street Essentials 03 - Frente" 
+                                 alt="Camisa Nike Donald - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.22 (4).jpeg" 
-                                 alt="Camisa Street Essentials 03 - Verso" 
+                                 alt="Camisa Nike Donald - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 03</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Donald</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(3, 'Camisa Street Essentials 03', 74.99)"
-                                data-id="3" data-name="Camisa Street Essentials 03" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(3, 'Camisa Nike Donald', 74.99, this)"
+                                id="btn-cart-3" data-id="3" data-name="Camisa Nike Donald" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
-                    <!-- Produto 4: Camisa Street Essentials 04 -->
+                    <!-- Produto 4: Nike Musgo -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.23.jpeg" 
-                                 alt="Camisa Street Essentials 04 - Frente" 
+                                 alt="Camisa Nike Musgo - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.23 (1).jpeg" 
-                                 alt="Camisa Street Essentials 04 - Verso" 
+                                 alt="Camisa Nike Musgo - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 04</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Musgo</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(4, 'Camisa Street Essentials 04', 74.99)"
-                                data-id="4" data-name="Camisa Street Essentials 04" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(4, 'Camisa Nike Musgo', 74.99, this)"
+                                id="btn-cart-4" data-id="4" data-name="Camisa Nike Musgo" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
-                    <!-- Produto 5: Camisa Street Essentials 05 -->
+                    <!-- Produto 5: Nike Bull -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.23 (2).jpeg" 
-                                 alt="Camisa Street Essentials 05 - Frente" 
+                                 alt="Camisa Nike Bull - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.23 (3).jpeg" 
-                                 alt="Camisa Street Essentials 05 - Verso" 
+                                 alt="Camisa Nike Bull - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 05</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Bull</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(5, 'Camisa Street Essentials 05', 74.99)"
-                                data-id="5" data-name="Camisa Street Essentials 05" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(5, 'Camisa Nike Bull', 74.99, this)"
+                                id="btn-cart-5" data-id="5" data-name="Camisa Nike Bull" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
-                    <!-- Produto 6: Camisa Street Essentials 06 -->
+                    <!-- Produto 6: Nike Bege -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.23 (4).jpeg" 
-                                 alt="Camisa Street Essentials 06 - Frente" 
+                                 alt="Camisa Nike Bege - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.23 (5).jpeg" 
-                                 alt="Camisa Street Essentials 06 - Verso" 
+                                 alt="Camisa Nike Bege - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 06</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Bege</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(6, 'Camisa Street Essentials 06', 74.99)"
-                                data-id="6" data-name="Camisa Street Essentials 06" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(6, 'Camisa Nike Bege', 74.99, this)"
+                                id="btn-cart-6" data-id="6" data-name="Camisa Nike Bege" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 7: Camisa Street Essentials 07 -->
+                    <!-- Produto 7: Balenciaga Purple -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.24.jpeg" 
-                                 alt="Camisa Street Essentials 07 - Frente" 
+                                 alt="Camisa Balenciaga Purple - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.24 (1).jpeg" 
-                                 alt="Camisa Street Essentials 07 - Verso" 
+                                 alt="Camisa Balenciaga Purple - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 07</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Balenciaga Purple</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(7, 'Camisa Street Essentials 07', 74.99)"
-                                data-id="7" data-name="Camisa Street Essentials 07" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(7, 'Camisa Balenciaga Purple', 74.99, this)"
+                                id="btn-cart-7" data-id="7" data-name="Camisa Balenciaga Purple" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
-                    <!-- Produto 8: Camisa Street Essentials 08 -->
+                    <!-- Produto 8: Nike Embrace Diversity -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.24 (2).jpeg" 
-                                 alt="Camisa Street Essentials 08 - Frente" 
+                                 alt="Camisa Nike Embrace diversity - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.24 (3).jpeg" 
-                                 alt="Camisa Street Essentials 08 - Verso" 
+                                 alt="Camisa Nike Embrace diversity - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 08</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Embrace Diversity</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(8, 'Camisa Street Essentials 08', 74.99)"
-                                data-id="8" data-name="Camisa Street Essentials 08" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(8, 'Camisa Nike Embrace Diversity', 74.99, this)"
+                                id="btn-cart-8" data-id="8" data-name="Camisa Nike Embrace Diversity" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 9: Camisa Street Essentials 09 -->
+                    <!-- Produto 9: Nike Just Do It -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.24 (4).jpeg" 
-                                 alt="Camisa Street Essentials 09 - Frente" 
+                                 alt="Camisa Nike Just do it - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.25.jpeg" 
-                                 alt="Camisa Street Essentials 09 - Verso" 
+                                 alt="Camisa Nike Just do it - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 09</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Just Do It</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(9, 'Camisa Street Essentials 09', 74.99)"
-                                data-id="9" data-name="Camisa Street Essentials 09" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(9, 'Camisa Nike Just Do It', 74.99, this)"
+                                id="btn-cart-9" data-id="9" data-name="Camisa Nike Just Do It" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
-                    <!-- Produto 10: Camisa Street Essentials 10 -->
+                    <!-- Produto 10: Nike Purple Just Do It -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.25 (1).jpeg" 
-                                 alt="Camisa Street Essentials 10 - Frente" 
+                                 alt="Camisa Nike Purple Just to it - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.25 (2).jpeg" 
-                                 alt="Camisa Street Essentials 10 - Verso" 
+                                 alt="Camisa Nike Purple Just to it - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 10</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Purple Just Do It</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(10, 'Camisa Street Essentials 10', 74.99)"
-                                data-id="10" data-name="Camisa Street Essentials 10" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(10, 'Camisa Nike Purple Just Do It', 74.99, this)"
+                                id="btn-cart-10" data-id="10" data-name="Camisa Nike Purple Just Do It" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 11: Camisa Street Essentials 11 -->
+                    <!-- Produto 11: Nike Nightmare Off White -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.25 (3).jpeg" 
-                                 alt="Camisa Street Essentials 11 - Frente" 
+                                 alt="Camisa Nike Nightmare Off White - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.25 (4).jpeg" 
-                                 alt="Camisa Street Essentials 11 - Verso" 
+                                 alt="Camisa Nike Nightmare Off White - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 11</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Nightmare O.W.</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(11, 'Camisa Street Essentials 11', 74.99)"
-                                data-id="11" data-name="Camisa Street Essentials 11" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(11, 'Camisa Nike Nightmare O.W.', 74.99, this)"
+                                id="btn-cart-11" data-id="11" data-name="Camisa Nike Nightmare O.W." data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 12: Camisa Street Essentials 12 -->
+                    <!-- Produto 12: Nike Shoes Max Heat -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.25 (5).jpeg" 
-                                 alt="Camisa Street Essentials 12 - Frente" 
+                                 alt="Camisa Nike Shoes Max Heat - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.26.jpeg" 
-                                 alt="Camisa Street Essentials 12 - Verso" 
+                                 alt="Camisa Nike Shoes Max Heat - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 12</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Shoes Max Heat</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(12, 'Camisa Street Essentials 12', 74.99)"
-                                data-id="12" data-name="Camisa Street Essentials 12" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(12, 'Camisa Nike Shoes Max Heat', 74.99, this)"
+                                id="btn-cart-12" data-id="12" data-name="Camisa Nike Shoes Max Heat" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 13: Camisa Street Essentials 13 -->
+                    <!-- Produto 13: Nike White Jordan -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.26 (1).jpeg" 
-                                 alt="Camisa Street Essentials 13 - Frente" 
+                                 alt="Camisa Nike White Jordan - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.26 (2).jpeg" 
-                                 alt="Camisa Street Essentials 13 - Verso" 
+                                 alt="Camisa Nike White Jordan - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 13</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike White Jordan</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(13, 'Camisa Street Essentials 13', 74.99)"
-                                data-id="13" data-name="Camisa Street Essentials 13" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(13, 'Camisa Nike White Jordan', 74.99, this)"
+                                id="btn-cart-13" data-id="13" data-name="Camisa Nike White Jordan" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 14: Camisa Street Essentials 14 -->
+                    <!-- Produto 14: Nike Lakers -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.26 (3).jpeg" 
-                                 alt="Camisa Street Essentials 14 - Frente" 
+                                 alt="Camisa Nike Lakers - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.26 (4).jpeg" 
-                                 alt="Camisa Street Essentials 14 - Verso" 
+                                 alt="Camisa Nike Lakers - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 14</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Lakers</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(14, 'Camisa Street Essentials 14', 74.99)"
-                                data-id="14" data-name="Camisa Street Essentials 14" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(14, 'Camisa Nike Lakers', 74.99, this)"
+                                id="btn-cart-14" data-id="14" data-name="Camisa Nike Lakers" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 15: Camisa Street Essentials 15 -->
+                    <!-- Produto 15: Palm Angels Dollar -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.27.jpeg" 
-                                 alt="Camisa Street Essentials 15 - Frente" 
+                                 alt="Camisa Palm Angels Dollar - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.27 (1).jpeg" 
-                                 alt="Camisa Street Essentials 15 - Verso" 
+                                 alt="Camisa Palm Angels Dollar - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 15</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Palm Angels Dollar</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(15, 'Camisa Street Essentials 15', 74.99)"
-                                data-id="15" data-name="Camisa Street Essentials 15" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(15, 'Camisa Palm Angels Dollar', 74.99, this)"
+                                id="btn-cart-15" data-id="15" data-name="Camisa Palm Angels Dollar" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 16: Camisa Street Essentials 16 -->
+                    <!-- Produto 16: Palm Angels Black -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.27 (2).jpeg" 
-                                 alt="Camisa Street Essentials 16 - Frente" 
+                                 alt="Camisa Palm Angels Black - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.27 (3).jpeg" 
-                                 alt="Camisa Street Essentials 16 - Verso" 
+                                 alt="Camisa Palm Angels Black - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 16</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Palm Angels Black</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(16, 'Camisa Street Essentials 16', 74.99)"
-                                data-id="16" data-name="Camisa Street Essentials 16" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(16, 'Camisa Palm Angels Black', 74.99, this)"
+                                id="btn-cart-16" data-id="16" data-name="Camisa Palm Angels Black" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 17: Camisa Street Essentials 17 -->
+                    <!-- Produto 17: Nike SB Dunk -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.27 (4).jpeg" 
-                                 alt="Camisa Street Essentials 17 - Frente" 
+                                 alt="Camisa Nike SB Dunk - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.28.jpeg" 
-                                 alt="Camisa Street Essentials 17 - Verso" 
+                                 alt="Camisa Nike SB Dunk - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 17</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike SB Dunk</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(17, 'Camisa Street Essentials 17', 74.99)"
-                                data-id="17" data-name="Camisa Street Essentials 17" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(17, 'Camisa Nike SB Dunk', 74.99, this)"
+                                id="btn-cart-17" data-id="17" data-name="Camisa Nike SB Dunk" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 18: Camisa Street Essentials 18 -->
+                    <!-- Produto 18: Nike Black Air -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.28 (1).jpeg" 
-                                 alt="Camisa Street Essentials 18 - Frente" 
+                                 alt="Camisa Nike Black Air - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.28 (2).jpeg" 
-                                 alt="Camisa Street Essentials 18 - Verso" 
+                                 alt="Camisa Nike Black Air - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 18</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Black Air</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(18, 'Camisa Street Essentials 18', 74.99)"
-                                data-id="18" data-name="Camisa Street Essentials 18" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(18, 'Camisa Nike Black Air', 74.99, this)"
+                                id="btn-cart-18" data-id="18" data-name="Camisa Nike Black Air" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 19: Camisa Street Essentials 19 -->
+                    <!-- Produto 19: Nike Marrom -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.28 (3).jpeg" 
-                                 alt="Camisa Street Essentials 19 - Frente" 
+                                 alt="Camisa Nike Marrom - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.29.jpeg" 
-                                 alt="Camisa Street Essentials 19 - Verso" 
+                                 alt="Camisa Nike Marrom - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 19</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Marrom</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(19, 'Camisa Street Essentials 19', 74.99)"
-                                data-id="19" data-name="Camisa Street Essentials 19" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(19, 'Camisa Nike Marrom', 74.99, this)"
+                                id="btn-cart-19" data-id="19" data-name="Camisa Nike Marrom" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
-                    <!-- Produto 20: Camisa Street Essentials 20 -->
+                    <!-- Produto 20: Nike Patolino -->
                     <div class="product-card group">
                         <div class="image-container">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.29 (1).jpeg" 
-                                 alt="Camisa Street Essentials 20 - Frente" 
+                                 alt="Camisa Nike Patolino - Frente" 
                                  class="product-image image-front"
                                  onerror="imgError(this)">
                             <img data-filename="WhatsApp Image 2025-10-15 at 11.20.29 (2).jpeg" 
-                                 alt="Camisa Street Essentials 20 - Verso" 
+                                 alt="Camisa Nike Patolino - Verso" 
                                  class="product-image image-back"
                                  onerror="imgError(this)">
                         </div>
-                        <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 20</h3>
+                        <h3 class="font-medium text-lg text-white mb-1">Nike Patolino</h3>
                         <p class="product-price">R$ 74,99</p>
-                        <button onclick="addToCart(20, 'Camisa Street Essentials 20', 74.99)"
-                                data-id="20" data-name="Camisa Street Essentials 20" data-price="74.99"
-                                class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
+                        <button onclick="addToCart(20, 'Camisa Nike Patolino', 74.99, this)"
+                                id="btn-cart-20" data-id="20" data-name="Camisa Nike Patolino" data-price="74.99"
+                                class="btn-primary btn-dark btn-add-to-cart w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
                 </div>
@@ -923,7 +965,7 @@
         }
 
         /** Adiciona um item ao carrinho ou aumenta sua quantidade. */
-        function addToCart(id, name, price) {
+        function addToCart(id, name, price, buttonElement) {
             const existingItemIndex = cart.findIndex(item => item.id === id);
 
             if (existingItemIndex > -1) {
@@ -934,6 +976,16 @@
 
             localStorage.setItem('17store_cart', JSON.stringify(cart));
             updateCartDisplay();
+            
+            // ANIMAÇÃO DE SUCESSO NO BOTÃO
+            if (buttonElement) {
+                buttonElement.classList.add('animate-success');
+                // Remove a animação após o preenchimento para o botão voltar ao normal
+                setTimeout(() => {
+                    buttonElement.classList.remove('animate-success');
+                }, 350); // Deve ser um pouco mais longo que o tempo de transição do CSS (0.3s)
+            }
+
             showTemporaryMessage('"' + name + '" adicionada ao carrinho!');
         }
 
