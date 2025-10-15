@@ -20,10 +20,12 @@
              font-family: 'Oswald', sans-serif;
         }
         .btn-primary {
-            @apply inline-block px-8 py-3 text-sm font-medium transition-colors duration-300 rounded-lg shadow-lg border-2 border-white;
+            /* Ajuste o preenchimento e o tamanho da fonte para o CTA */
+            @apply inline-block px-8 py-3 text-base font-semibold transition-colors duration-300 rounded-lg shadow-lg border-2 border-white;
         }
         .btn-dark {
-            @apply bg-white text-black hover:bg-gray-200;
+            /* Adicionado sombra extra e hover para dar mais destaque */
+            @apply bg-white text-black hover:bg-gray-200 shadow-white/50 hover:shadow-white/70;
         }
         .btn-light {
             @apply bg-black text-white hover:bg-gray-800;
@@ -77,6 +79,11 @@
         #cart-count {
             @apply absolute -top-1 -right-1 bg-white text-black text-xs font-bold w-5 h-5 flex items-center justify-center rounded-full border border-black;
         }
+        
+        /* Aumentar o tamanho do preço para dar mais destaque */
+        .product-price {
+            @apply text-2xl font-extrabold text-white mb-4;
+        }
     </style>
 </head>
 <body>
@@ -88,27 +95,30 @@
         const IMAGE_BASE_URL = 'https://raw.githubusercontent.com/costaus/dz/main/photos1/';
         const WHATSAPP_NUMBER = '553599999999'; // Seu número de WhatsApp
         
-        // FUNÇÃO DE CODIFICAÇÃO ROBUSTA (Corrigida)
+        // FUNÇÃO DE CODIFICAÇÃO ROBUSTA 
         function getEncodedImageURL(filename) {
             if (!filename) return '';
 
-            // Remove espaços em branco extras nas laterais
             filename = filename.trim();
 
-            // Encontra a última ocorrência do ponto para separar extensão corretamente
             const lastDot = filename.lastIndexOf('.');
             let namePart = filename;
             let ext = '';
 
             if (lastDot > -1) {
                 namePart = filename.slice(0, lastDot);
-                ext = filename.slice(lastDot); // inclui o ponto, ex: ".jpeg"
+                ext = filename.slice(lastDot); 
             }
 
-            // Codifica o nome inteiro (trata espaços, parênteses, etc.)
-            // Adicionado .replace(/\(/g, '%28').replace(/\)/g, '%29') para garantir parênteses
-            const encodedName = encodeURIComponent(namePart).replace(/\(/g, '%28').replace(/\)/g, '%29');
-            
+            // Codifica a URL e garante que parênteses e espaços sejam tratados
+            let encodedName = encodeURIComponent(namePart)
+                                .replace(/\(/g, '%28')
+                                .replace(/\)/g, '%29')
+                                .replace(/\s/g, '%20'); // Força a codificação de espaços para %20
+
+            // Tenta forçar a extensão para minúsculas
+            ext = ext.toLowerCase();
+
             return IMAGE_BASE_URL + encodedName + ext;
         }
         
@@ -180,6 +190,7 @@
         
         let messageTimeout;
         
+        /** Exibe uma mensagem temporária na tela (substituindo o alert()). */
         function showTemporaryMessage(text, isError = false) {
             const existing = document.getElementById('temp-message-box');
             if (existing) existing.remove();
@@ -368,9 +379,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 01</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(1, 'Camisa Street Essentials 01', 99.99)" 
-                                data-id="1" data-name="Camisa Street Essentials 01" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(1, 'Camisa Street Essentials 01', 74.99)" 
+                                data-id="1" data-name="Camisa Street Essentials 01" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
@@ -387,9 +398,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 02</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(2, 'Camisa Street Essentials 02', 99.99)"
-                                data-id="2" data-name="Camisa Street Essentials 02" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(2, 'Camisa Street Essentials 02', 74.99)"
+                                data-id="2" data-name="Camisa Street Essentials 02" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -406,9 +417,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 03</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(3, 'Camisa Street Essentials 03', 99.99)"
-                                data-id="3" data-name="Camisa Street Essentials 03" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(3, 'Camisa Street Essentials 03', 74.99)"
+                                data-id="3" data-name="Camisa Street Essentials 03" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
@@ -425,9 +436,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 04</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(4, 'Camisa Street Essentials 04', 99.99)"
-                                data-id="4" data-name="Camisa Street Essentials 04" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(4, 'Camisa Street Essentials 04', 74.99)"
+                                data-id="4" data-name="Camisa Street Essentials 04" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
@@ -444,9 +455,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 05</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(5, 'Camisa Street Essentials 05', 99.99)"
-                                data-id="5" data-name="Camisa Street Essentials 05" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(5, 'Camisa Street Essentials 05', 74.99)"
+                                data-id="5" data-name="Camisa Street Essentials 05" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
@@ -463,9 +474,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 06</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(6, 'Camisa Street Essentials 06', 99.99)"
-                                data-id="6" data-name="Camisa Street Essentials 06" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(6, 'Camisa Street Essentials 06', 74.99)"
+                                data-id="6" data-name="Camisa Street Essentials 06" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -482,9 +493,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 07</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(7, 'Camisa Street Essentials 07', 99.99)"
-                                data-id="7" data-name="Camisa Street Essentials 07" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(7, 'Camisa Street Essentials 07', 74.99)"
+                                data-id="7" data-name="Camisa Street Essentials 07" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
@@ -501,9 +512,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 08</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(8, 'Camisa Street Essentials 08', 99.99)"
-                                data-id="8" data-name="Camisa Street Essentials 08" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(8, 'Camisa Street Essentials 08', 74.99)"
+                                data-id="8" data-name="Camisa Street Essentials 08" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -520,9 +531,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 09</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(9, 'Camisa Street Essentials 09', 99.99)"
-                                data-id="9" data-name="Camisa Street Essentials 09" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(9, 'Camisa Street Essentials 09', 74.99)"
+                                data-id="9" data-name="Camisa Street Essentials 09" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
@@ -539,9 +550,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 10</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(10, 'Camisa Street Essentials 10', 99.99)"
-                                data-id="10" data-name="Camisa Street Essentials 10" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(10, 'Camisa Street Essentials 10', 74.99)"
+                                data-id="10" data-name="Camisa Street Essentials 10" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -558,9 +569,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 11</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(11, 'Camisa Street Essentials 11', 99.99)"
-                                data-id="11" data-name="Camisa Street Essentials 11" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(11, 'Camisa Street Essentials 11', 74.99)"
+                                data-id="11" data-name="Camisa Street Essentials 11" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -577,9 +588,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 12</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(12, 'Camisa Street Essentials 12', 99.99)"
-                                data-id="12" data-name="Camisa Street Essentials 12" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(12, 'Camisa Street Essentials 12', 74.99)"
+                                data-id="12" data-name="Camisa Street Essentials 12" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -596,9 +607,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 13</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(13, 'Camisa Street Essentials 13', 99.99)"
-                                data-id="13" data-name="Camisa Street Essentials 13" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(13, 'Camisa Street Essentials 13', 74.99)"
+                                data-id="13" data-name="Camisa Street Essentials 13" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -615,9 +626,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 14</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(14, 'Camisa Street Essentials 14', 99.99)"
-                                data-id="14" data-name="Camisa Street Essentials 14" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(14, 'Camisa Street Essentials 14', 74.99)"
+                                data-id="14" data-name="Camisa Street Essentials 14" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -634,9 +645,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 15</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(15, 'Camisa Street Essentials 15', 99.99)"
-                                data-id="15" data-name="Camisa Street Essentials 15" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(15, 'Camisa Street Essentials 15', 74.99)"
+                                data-id="15" data-name="Camisa Street Essentials 15" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -653,9 +664,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 16</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(16, 'Camisa Street Essentials 16', 99.99)"
-                                data-id="16" data-name="Camisa Street Essentials 16" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(16, 'Camisa Street Essentials 16', 74.99)"
+                                data-id="16" data-name="Camisa Street Essentials 16" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -672,9 +683,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 17</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(17, 'Camisa Street Essentials 17', 99.99)"
-                                data-id="17" data-name="Camisa Street Essentials 17" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(17, 'Camisa Street Essentials 17', 74.99)"
+                                data-id="17" data-name="Camisa Street Essentials 17" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -691,9 +702,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 18</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(18, 'Camisa Street Essentials 18', 99.99)"
-                                data-id="18" data-name="Camisa Street Essentials 18" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(18, 'Camisa Street Essentials 18', 74.99)"
+                                data-id="18" data-name="Camisa Street Essentials 18" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -710,9 +721,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 19</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(19, 'Camisa Street Essentials 19', 99.99)"
-                                data-id="19" data-name="Camisa Street Essentials 19" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(19, 'Camisa Street Essentials 19', 74.99)"
+                                data-id="19" data-name="Camisa Street Essentials 19" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
                     
@@ -729,9 +740,9 @@
                                  onerror="imgError(this)">
                         </div>
                         <h3 class="font-medium text-lg text-white mb-1">Camisa Street Essentials 20</h3>
-                        <p class="text-xl font-bold text-white mb-4">R$ 99,99</p>
-                        <button onclick="addToCart(20, 'Camisa Street Essentials 20', 99.99)"
-                                data-id="20" data-name="Camisa Street Essentials 20" data-price="99.99"
+                        <p class="product-price">R$ 74,99</p>
+                        <button onclick="addToCart(20, 'Camisa Street Essentials 20', 74.99)"
+                                data-id="20" data-name="Camisa Street Essentials 20" data-price="74.99"
                                 class="btn-primary btn-dark w-full text-center">Adicionar ao Carrinho</button>
                     </div>
 
@@ -900,11 +911,9 @@
         /** Atualiza os contadores do carrinho na tela. */
         function updateCartDisplay() {
             const count = cart.reduce((sum, item) => sum + item.qty, 0);
-            
             document.getElementById('cart-count').textContent = count;
             document.getElementById('float-cart-count').textContent = count;
             
-            // Exibe ou oculta o botão flutuante e o contador baseado no estado do carrinho
             const floatBtn = document.getElementById('float-whatsapp-btn');
             if (count > 0) {
                 floatBtn.classList.remove('hidden');
