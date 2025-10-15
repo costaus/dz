@@ -84,17 +84,22 @@
     <!-- URL BASE CORRIGIDA PARA GITHUB PAGES -->
     <script>
         // CORRIGIDO: Agora aponta para a URL pública do GitHub Pages.
-        // O cliente DEVE ter ativado o GitHub Pages no seu repositório.
         const IMAGE_BASE_URL = 'https://costaus.github.io/dz/photos1/';
         const WHATSAPP_NUMBER = '553599999999'; // Seu número de WhatsApp
         
         // Função para garantir que os nomes dos arquivos sejam codificados corretamente
+        // Usamos encodeURI para garantir que espaços e caracteres especiais sejam codificados 
+        // de forma universal, e removemos a extensão do encodeURI para garantir o formato.
         function getEncodedImageURL(filename) {
-            // Corrige espaços e parênteses
-            const encodedFilename = filename.replace(/ /g, '%20')
-                                            .replace(/\(/g, '%28')
-                                            .replace(/\)/g, '%29');
-            return IMAGE_BASE_URL + encodedFilename;
+            // Separa o nome do arquivo da extensão, assume a extensão .jpeg
+            const parts = filename.split('.');
+            const name = parts[0];
+            const extension = parts.length > 1 ? '.' + parts.pop() : '.jpeg';
+
+            // Codifica apenas o nome, pois o encodeURI nativo do JS é a forma mais segura.
+            const encodedName = encodeURI(name).replace(/\(/g, '%28').replace(/\)/g, '%29');
+            
+            return IMAGE_BASE_URL + encodedName + extension;
         }
         
         // Função universal de fallback de imagem (para debug e UX)
@@ -104,6 +109,93 @@
             // Usa um placeholder P&B com a dimensão ideal (400x533 para manter a proporção 3:4)
             image.src = 'https://placehold.co/400x533/000/FFF?text=FOTO+INDISPON%C3%8DVEL';
             image.style.objectFit = 'contain';
+        }
+
+        // --- Funções do Carrinho (mantidas) ---
+        let cart = JSON.parse(localStorage.getItem('17store_cart') || '[]');
+        
+        function updateCartDisplay() {
+            const count = cart.reduce((sum, item) => sum + item.qty, 0);
+            document.getElementById('cart-count').textContent = count;
+            document.getElementById('float-cart-count').textContent = count;
+            
+            const floatBtn = document.getElementById('float-whatsapp-btn');
+            if (count > 0) {
+                floatBtn.classList.remove('hidden');
+            } else {
+                floatBtn.classList.add('hidden');
+            }
+        }
+
+        function addToCart(id, name, price) {
+            const existingItemIndex = cart.findIndex(item => item.id === id);
+
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].qty += 1;
+            } else {
+                cart.push({ id, name, price, qty: 1 });
+            }
+
+            localStorage.setItem('17store_cart', JSON.stringify(cart));
+            updateCartDisplay();
+            showTemporaryMessage('"' + name + '" adicionada ao carrinho!');
+        }
+
+        function checkoutCart() {
+            if (cart.length === 0) {
+                showTemporaryMessage('Seu carrinho está vazio. Adicione um produto primeiro!', true);
+                return;
+            }
+
+            let message = '*🛒 PEDIDO 17STORE (via Site)*\n\n';
+            let total = 0;
+
+            cart.forEach((item, index) => {
+                const itemTotal = item.qty * item.price;
+                total += itemTotal;
+                
+                message += `${item.qty}x ${item.name} (R$ ${item.price.toFixed(2).replace('.', ',')})\n`;
+            });
+
+            message += '\n-------------------\n';
+            message += `*TOTAL: R$ ${total.toFixed(2).replace('.', ',')}*`;
+            message += '\n-------------------\n\n';
+            message += 'Olá, gostaria de finalizar esta compra. Por favor, me ajude com o pagamento e a entrega/retirada.';
+
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
+
+            window.open(whatsappLink, '_blank');
+        }
+        
+        let messageTimeout;
+        
+        function showTemporaryMessage(text, isError = false) {
+            const existing = document.getElementById('temp-message-box');
+            if (existing) existing.remove();
+            
+            const messageBox = document.createElement('div');
+            messageBox.id = 'temp-message-box';
+            messageBox.textContent = text;
+            
+            const baseClass = 'fixed top-20 left-1/2 transform -translate-x-1/2 p-3 rounded-lg shadow-2xl transition-all duration-300 z-[70]';
+            const styleClass = isError ? 'bg-red-600 text-white' : 'bg-white text-black';
+
+            messageBox.className = `${baseClass} ${styleClass}`;
+            messageBox.style.opacity = 0;
+
+            document.body.appendChild(messageBox);
+
+            setTimeout(() => {
+                messageBox.style.opacity = 1;
+            }, 10);
+            
+            if (messageTimeout) clearTimeout(messageTimeout);
+
+            messageTimeout = setTimeout(() => {
+                messageBox.style.opacity = 0;
+                messageBox.addEventListener('transitionend', () => messageBox.remove());
+            }, 3000);
         }
     </script>
 
@@ -812,7 +904,6 @@
             const encodedMessage = encodeURIComponent(message);
             const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodedMessage}`;
 
-            // Abre o WhatsApp
             window.open(whatsappLink, '_blank');
             
             // Opcional: Limpar o carrinho após o checkout (Pode ser removido se preferir que o cliente limpe após a confirmação no WhatsApp)
